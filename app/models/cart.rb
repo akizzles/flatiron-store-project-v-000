@@ -21,5 +21,18 @@ class Cart < ActiveRecord::Base
     line_item
   end
 
+  def checkout
+    remove_inventory
+    user.remove_cart
+    update(status: 'submitted')
+  end
+
+  private
+
+  def remove_inventory
+    line_items.each do |line_item|
+      line_item.item.remove(line_item.quantity)
+    end
+  end
 
 end
